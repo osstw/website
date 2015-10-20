@@ -1,24 +1,42 @@
-========================
-Website Portal for Sales
-========================
+.. image:: https://img.shields.io/badge/licence-AGPL--3-blue.svg
+    :target: http://www.gnu.org/licenses/agpl-3.0-standalone.html
+    :alt: License: AGPL-3
 
-Backport (with adjustments) of the ``website_portal_sale`` module of Odoo 9.
+============================
+Website Portal for Purchases
+============================
 
-This module add the user's sales documents in the frontend portal.
-Customers will be able to see the list and state of their quotations, sales
+This module add the user's purchases documents in the frontend portal.
+Suppliers will be able to see the list and state of their quotations, purchases
 and invoices.
 
-Known Issues / Roadmap
+Usage
+=====
+
+To use this module, you need to:
+
+1. You must select an account type in signup form.
+
+.. image:: https://odoo-community.org/website/image/ir.attachment/5784_f2813bd/datas
+   :alt: Try me on Runbot
+   :target: https://runbot.odoo-community.org/runbot/186/8.0
+
+For further information, please visit:
+
+* https://www.odoo.com/forum/help-1
+
+Known issues / Roadmap
 ======================
 
-* In v9, the field ``validity_date`` of the sale order has been moved from the
-  ``website_quote`` module to the base ``sale`` module, therefore the module
-  references it without problem as the ``sale`` module is a dependency of this
-  one.
-  For version 8 the validity_date on the portal has been removed completely at
-  the moment. Instead, we should make a conditional template that shows the field
-  if the ``website_quote`` module is installed.
 * Tests
+
+Bug Tracker
+===========
+
+Bugs are tracked on `GitHub Issues <https://github.com/OCA/186/issues>`_.
+In case of trouble, please check there if your issue has already been reported.
+If you spotted it first, help us smashing it by providing a detailed and welcomed feedback
+`here <https://github.com/OCA/186/issues/new?body=module:%20website_portal_supplier%0Aversion:%208.0%0A%0A**Steps%20to%20reproduce**%0A-%20...%0A%0A**Current%20behavior**%0A%0A**Expected%20behavior**>`_.
 
 Credits
 =======
@@ -26,8 +44,9 @@ Credits
 Contributors
 ------------
 
-* Odoo SA <https://www.odoo.com>
-* Leonardo Donelli @ MONK Software <donelli@webmonks.it>
+* Rafael Blasco <rafabn@antiun.com>
+* Carlos Dauden <carlos@incaser.es>
+* Sergio Teruel <sergio@incaser.es>
 
 Maintainer
 ----------

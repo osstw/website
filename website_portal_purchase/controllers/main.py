@@ -1,4 +1,8 @@
 # -*- coding: utf-8 -*-
+# (c) 2015 Antiun Ingeniería S.L. - Sergio Teruel
+# (c) 2015 Antiun Ingeniería S.L. - Carlos Dauden
+# License AGPL-3 - See http://www.gnu.org/licenses/agpl-3.0.html
+
 import datetime
 
 from openerp import http
@@ -10,7 +14,7 @@ from openerp.addons.website_portal.controllers.main import WebsiteAccount
 class PortalPurchaseWebsiteAccount(WebsiteAccount):
 
     @http.route(['/my/supplier/home'], type='http', auth="user", website=True)
-    def account(self, **kw):
+    def supplier_account(self, **kw):
         """ Add purchase documents to main account page """
         response = super(PortalPurchaseWebsiteAccount, self).account(**kw)
 
@@ -40,7 +44,7 @@ class PortalPurchaseWebsiteAccount(WebsiteAccount):
 
     @http.route(['/my/supplier/orders/<int:order>'], type='http', auth="user",
                 website=True)
-    def orders_followup(self, order=None):
+    def supplier_orders_followup(self, order=None):
         partner = request.env['res.users'].browse(request.uid).partner_id
         domain = [
             ('partner_id.id', '=', partner.id),

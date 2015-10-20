@@ -2,6 +2,12 @@
 <openerp>
 <data>
 
+    <template id="my_account_link" name="Link to frontend portal" inherit_id="website_portal.my_account_link">
+        <xpath expr="//li/a[@href='/my/home']/.." position="after">
+            <li><a href="/my/supplier/home" role="menuitem">My Supplier Account</a></li>
+        </xpath>
+    </template>
+
     <template id="account" name="Account" inherit_id="website_portal.account">
         <xpath expr="//div[contains(@class,'o_my_documents')]" position="inside">
             <t t-call="website_portal_purchase.quotations" />
