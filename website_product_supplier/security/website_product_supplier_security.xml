@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="0">
+
+        <!-- Acces to my products-->
+        <record id="website_product_supplier_my" model="ir.rule">
+            <field name="name">Supplier Products</field>
+            <field name="model_id" ref="product.model_product_product"/>
+            <field name="global" eval="False"/>
+            <field name="groups" eval="[(4,ref('base.group_portal'))]"/>
+            <field name="domain_force">user.partner_id.supplier and [
+                ('manufacturer','=',user.partner_id.id)] or False
+            </field>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+
+        <record id="website_product_template_supplier_my" model="ir.rule">
+            <field name="name">Supplier Products</field>
+            <field name="model_id" ref="product.model_product_template"/>
+            <field name="global" eval="False"/>
+            <field name="groups" eval="[(4,ref('base.group_portal'))]"/>
+            <field name="domain_force">user.partner_id.supplier and [
+                ('manufacturer','=',user.partner_id.id)] or False
+            </field>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+
+        <!--ACCESS TO MY SERVICES-->
+        <!--<record id="website_collegiate_profile_service" model="ir.rule">-->
+            <!--<field name="name">Collegiate services portal user rule</field>-->
+            <!--<field name="model_id" ref="ics_collegiate.model_collegiate_service"/>-->
+            <!--<field name="global" eval="False"/>-->
+            <!--<field name="groups" eval="[(4,ref('base.group_portal'))]"/>-->
+            <!--<field name="domain_force">[('collegiate_id','=',user.partner_id.collegiate_id.id)]</field>-->
+            <!--<field name="perm_read" eval="True"/>-->
+            <!--<field name="perm_write" eval="True"/>-->
+            <!--<field name="perm_create" eval="True"/>-->
+            <!--<field name="perm_unlink" eval="False"/>-->
+        <!--</record>-->
+
+        <!--<record id="res_partner_portal_public_rule" model="ir.rule">-->
+            <!--<field name="name">res_partner: portal/public: read access on my commercial partner by incaser</field>-->
+            <!--<field name="model_id" ref="base.model_res_partner"/>-->
+            <!--<field name="domain_force">['|',('id', 'child_of', user.commercial_partner_id.id),('entity_type','in',['health_center'])]</field>-->
+            <!--<field name="groups" eval="[(4, ref('base.group_portal'))]"/>-->
+            <!--<field name="perm_create" eval="False"/>-->
+            <!--<field name="perm_unlink" eval="False"/>-->
+            <!--<field name="perm_write" eval="True"/>-->
+        <!--</record>-->
+
+    </data>
+</openerp>

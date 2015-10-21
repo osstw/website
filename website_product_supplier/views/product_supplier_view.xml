@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data noupdate="0">
+
+<template id="product" name="Product">
+  <t t-call="website.layout">
+      <t t-set="additional_title" t-value="product.name"/>
+      <form id="supplier_product" action="/supplier/product/write">
+          <div id="wrap">
+            <section id="product_detail">
+              <div class="row">
+                <div class="col-sm-4 col-md-4 col-lg-4">
+                    <span t-field="product.image" t-field-options='{"widget": "image", "class": "product_detail_img", "alt-field": "name"}' class="oe_form_field_image_controls"/>
+                </div><div class="col-sm-4 col-md-4 col-lg-3 col-lg-offset-1">
+                    <h1 t-field="product.name">Product Name</h1>
+                    <input type="text" class="form-control" name="product.name" t-attf-value="#{product.name}"/>
+                    <hr t-if="product.description_sale"/>
+                    <input type="text" class="form-control" name="product.description_sale" t-attf-value="#{product.description_sale}"/>
+                    <div><p t-field="product.description_sale" class="text-muted"/></div>
+                    <hr/>
+                </div>
+              </div>
+              <div>
+                <input type="text" class="form-control" name="product.price" t-attf-value="#{product.price}"/>
+                <input type="text" class="form-control" name="product.list_price" t-attf-value="#{product.list_price}"/>
+              </div>
+            </section>
+          </div>
+          <div>
+              <button type="submit" name="save_product">Save</button>
+          </div>
+      </form>
+  </t>
+</template>
+
+<!--<template id="content_new_product" inherit_id="website.user_navbar" groups="base.group_sale_manager">-->
+    <!--<xpath expr="//ul[@id='oe_systray']/li/ul[@class='dropdown-menu oe_content_menu']" position="inside">-->
+        <!--<li><a id="create-new-supplier-product" href="#" data-action="new_product">New Supplier Product</a></li>-->
+    <!--</xpath>-->
+<!--</template>-->
+
+<template id="supplier_add_product_link" name="Link to add supplier product" inherit_id="website_portal.my_account_link">
+    <xpath expr="//li/a[@href='/my/home']/.." position="after">
+        <li><a href="/supplier/new_product" role="menuitem">New Supplier Product</a></li>
+        <li><a id="create-new-supplier-product" href="#" data-action="new_supplier_product">New Supplier Product2</a></li>
+    </xpath>
+</template>
+
+</data>
+</openerp>

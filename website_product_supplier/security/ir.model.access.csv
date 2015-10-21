@@ -1,0 +1,6 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_collegiate_portal_user,website.collegiate.profile.collegiate,ics_collegiate.model_ics_collegiate,base.group_portal,1,1,0,0
+access_collegiate_service_portal_user,website.collegiate.service.profile.collegiate,ics_collegiate.model_collegiate_service,base.group_portal,1,1,1,0
+base.access_res_partner_portal,res_partner group_portal,base.model_res_partner,base.group_portal,1,1,0,0
+access_collegiate_rc_payment_portal_user,website.collegiate.profile.collegiate_rc_payment,ics_collegiate.model_collegiate_rc_payment_receipt,base.group_portal,1,0,0,0
+access_collegiate_employment_category_portal_user,website.collegiate.employment.category.portal.user,ics_collegiate.model_collegiate_employment_category,base.group_portal,1,0,0,0
