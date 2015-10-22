@@ -95,6 +95,9 @@
                         </t>
                     </div>
                 </div>
+                <div class="products_pager">
+                  <t t-call="website.pager"/>
+                </div>
             </div>
         </t>
     </template>
