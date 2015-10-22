@@ -2,49 +2,76 @@
 <openerp>
 <data noupdate="0">
 
-<template id="product" name="Product">
-  <t t-call="website.layout">
-      <t t-set="additional_title" t-value="product.name"/>
-      <form id="supplier_product" action="/supplier/product/write">
-          <div id="wrap">
-            <section id="product_detail">
-              <div class="row">
-                <div class="col-sm-4 col-md-4 col-lg-4">
-                    <span t-field="product.image" t-field-options='{"widget": "image", "class": "product_detail_img", "alt-field": "name"}' class="oe_form_field_image_controls"/>
-                </div><div class="col-sm-4 col-md-4 col-lg-3 col-lg-offset-1">
-                    <h1 t-field="product.name">Product Name</h1>
-                    <input type="text" class="form-control" name="product.name" t-attf-value="#{product.name}"/>
-                    <hr t-if="product.description_sale"/>
-                    <input type="text" class="form-control" name="product.description_sale" t-attf-value="#{product.description_sale}"/>
-                    <div><p t-field="product.description_sale" class="text-muted"/></div>
-                    <hr/>
+    <!-- Product view for create and edit -->
+    <template id="product" name="Supplier Product">
+        <t t-call="website.layout">
+        <t t-set="additional_title" t-value="product.get('name')"/>
+            <div class="container mt8">
+                <div class="row mt32">
+                        <!-- Show error information -->
+                        <div class="alert alert-warning" t-if="error">
+                            <i class="fa fa-exclamation-triangle"/><span t-esc="error_name"/>
+                        </div>
+                        <form id="supplier_product" class="form-horizontal" t-attf-action="/supplier/product/save" method="post" enctype="multipart/form-data">
+                            <input id="porduct_id" type="hidden" name="product_id"/>
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h3 class="panel-title"><span t-esc="product.get('name','New product')"/></h3>
+                                </div>
+                                <div class="panel-body">
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <div class="col-sm-4 col-md-4 col-lg-4">
+                                                <span t-field="main_obj.image" t-field-options='{"widget": "image", "class": "product_detail_img", "alt-field": "name"}' class="oe_form_field_image_controls"/>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-8">
+                                            <div t-attf-class="form-group #{error.get('name') and 'has-error' or ''}">
+                                                <label class="col-md-2 control-label">Name</label>
+                                                <div class="col-md-10">
+                                                    <input id="name" class="form-control" name="name" placeholder="Product name..."
+                                                           t-att-value="product.get('name')"/>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-md-2 control-label">Description</label>
+                                                <div class="col-md-10">
+                                                    <textarea id="description" class="form-control" name="description" placeholder="Product Description..."><t t-esc="product.get('description')"/></textarea>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-md-2 control-label">Price</label>
+                                                <div class="col-md-10">
+                                                    <input id="list_price" class="form-control" name="list_price" placeholder="Product Price..."
+                                                           t-att-value="product.get('list_price')"/>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-md-2 control-label" for="ufile">Picture</label>
+                                                <div class="col-md-10">
+                                                    <input class="input-file" id="fileInput" type="file" name="ufile" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-12">
+                                    <button  type="submit" class="btn btn-primary">Save Product</button>
+                                </div>
+                            </div>
+                        </form>
                 </div>
-              </div>
-              <div>
-                <input type="text" class="form-control" name="product.price" t-attf-value="#{product.price}"/>
-                <input type="text" class="form-control" name="product.list_price" t-attf-value="#{product.list_price}"/>
-              </div>
-            </section>
-          </div>
-          <div>
-              <button type="submit" name="save_product">Save</button>
-          </div>
-      </form>
-  </t>
-</template>
+            </div>
+        </t>
+    </template>
 
-<!--<template id="content_new_product" inherit_id="website.user_navbar" groups="base.group_sale_manager">-->
-    <!--<xpath expr="//ul[@id='oe_systray']/li/ul[@class='dropdown-menu oe_content_menu']" position="inside">-->
-        <!--<li><a id="create-new-supplier-product" href="#" data-action="new_product">New Supplier Product</a></li>-->
-    <!--</xpath>-->
-<!--</template>-->
-
-<template id="supplier_add_product_link" name="Link to add supplier product" inherit_id="website_portal.my_account_link">
-    <xpath expr="//li/a[@href='/my/home']/.." position="after">
-        <li><a href="/supplier/new_product" role="menuitem">New Supplier Product</a></li>
-        <li><a id="create-new-supplier-product" href="#" data-action="new_supplier_product">New Supplier Product2</a></li>
-    </xpath>
-</template>
+    <template id="supplier_add_product_link" name="Link to add supplier product" inherit_id="website_portal.my_account_link">
+        <xpath expr="//li/a[@href='/my/home']/.." position="after">
+            <li><a href="/supplier/new_product" role="menuitem">New Supplier Product</a></li>
+        </xpath>
+    </template>
 
 </data>
 </openerp>

@@ -3,72 +3,90 @@
 # (c) 2015 Antiun Ingeniería S.L. - Carlos Dauden
 # License AGPL-3 - See http://www.gnu.org/licenses/agpl-3.0.html
 
-from openerp.addons.website_sale.controllers.main import website_sale
-from openerp.addons.website_sale.controllers.main import QueryURL
-from openerp.addons.website.models.website import slug
 from openerp import http
 from openerp.http import request
 
-from openerp import _
 
+class WebsiteProductSupplier(http.Controller):
 
-class WebsiteSale(website_sale):
+    mandatory_product_fields = ['name']
+    optional_product_fields = ['description', 'list_price']
 
-    @http.route(['/supplier/add_product'],
-                type='http', auth="user", methods=['POST'], website=True)
-    def supplier_add_product(self, name=None, category=0, **post):
-        product_obj = request.env['product.product']
-        product = product_obj.create(self._prepare_product(name, category))
-        return request.redirect("/supplier/product/%s?enable_editor=1" % slug(
-            product.product_tmpl_id))
+    def _get_mandatory_product_fields(self):
+        return self.mandatory_product_fields
 
-    @http.route(['/supplier/product'],
-                type='http', auth="user", methods=['POST'], website=True)
-    def supplier_product(self, name=None, category=0, **post):
-        product_obj = request.env['product.product']
-        product = product_obj.create(self._prepare_product(name, category))
-        return request.redirect("/supplier/product/%s?enable_editor=1" % slug(
-            product.product_tmpl_id))
+    def _get_optional_product_fields(self):
+        return self.optional_product_fields
 
-    def _prepare_product(self, name=None, category=0):
-        vals = {
-            'name': name and name or _('New Product'),
-            'public_categ_ids': category,
-            'manufacturer': request.env.user.partner_id.id
-                }
-        return vals
+    def check_product_form_validate(self, data):
+        error = dict()
+        for field_name in self._get_mandatory_product_fields():
+            if not data.get(field_name):
+                error[field_name] = 'missing'
+        return error
+
+    def _post_prepare_product_query(self, product_dic, data):
+        return product_dic
+
+    def product_field_parse(self, data):
+        # set mandatory and optional fields
+        all_fields = self._get_mandatory_product_fields() + \
+                     self._get_optional_product_fields()
+        # set data
+        if isinstance(data, dict):
+            product_dic = dict((field_name, data[field_name])
+                         for field_name in all_fields if field_name in data)
+        else:
+            product_dic = dict((field_name, getattr(data, field_name))
+                         for field_name in all_fields)
+        product_dic = self._post_prepare_product_query(product_dic, data)
+        return product_dic
+
+    def product_values(self, post):
+        values = {
+            'product': self._prepare_supplier_product(post),
+        }
+        return values
 
     @http.route(['/supplier/product/<model("product.template"):product>',
                  '/supplier/new_product'],
-                type='http', auth="public", website=True)
-    def supplier_product(self, product=None, category='', search='', **kwargs):
-        if product is None:
-            product = request.env['product.template']
+                type='http', auth="user", website=True)
+    def supplier_product(self, product=None, category='', search='', **post):
         values = {
             'search': search,
             'category': category,
-            'product': product,
+            'main_obj': product,
+            'error': {},
         }
+        if product is None:
+            product = request.env['product.template']
+            values['main_obj'] = product
+        values['product'] = self.product_field_parse(product)
         return request.website.render(
             "website_product_supplier.product", values)
+
 
     @http.route(['/supplier/product/save/<model("product.template"):product>',
                  '/supplier/product/save/'],
                 type='http', auth="user", website=True)
     def supplier_product_write(self, product=None, **post):
-        vals = {
-            'name': post.get('name', ''),
-            'description_sale': post.get('description_sale', ''),
-            'price': post.get('price', 0.0),
-            'list_price': post.get('list_price', 0.0),
-        }
-        if product is None:
-            product = request.env['product.template'].create(vals)
-        else:
-            product.write(vals)
-
+        product_tmp_obj = request.env['product.template']
         values = {
-            'product': product,
+            'main_obj': product,
+            'product': self.product_field_parse(post),
         }
+        values["error"] = self.check_product_form_validate(values["product"])
+        if values["error"]:
+            if product is None:
+                values['main_obj'] = product_tmp_obj
+            return request.website.render(
+                "website_product_supplier.product", values)
+
+        if product is None:
+            values['main_obj'] = product_tmp_obj.sudo().create(
+                values['product'])
+        else:
+            product.write(values['product'])
+
         return request.website.render(
             "website_product_supplier.product", values)
