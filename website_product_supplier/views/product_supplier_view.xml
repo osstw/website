@@ -67,9 +67,42 @@
         </t>
     </template>
 
+    <template id="product_list" name="Supplier Products">
+        <t t-call="website.layout">
+            <div class="container mt8">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Your Products</h3>
+                    </div>
+                    <div class="panel-body">
+                        <t t-foreach="products" t-as="product">
+                            <div class="row mb8">
+                                <div class="col col-md-2 col-xs-6">
+                                    <span t-field="product.name"></span>
+                                </div>
+                                <div class="col col-md-2 col-xs-6"><t t-esc="product.description"/></div>
+                                <div class="col col-md-4 col-xs-12"><t t-esc="product.list_price"/></div>
+                                <div class="col col-md-2 col-xs-6">
+                                    <span t-if="product.website_published">
+                                        <i class="fa fa-check"/>
+                                    </span>
+                                    <span t-if="not product.website_published">
+                                        <i class="fa fa-ban"/>
+                                    </span>
+                                    <span class="icon-request-label" t-field="product.website_published"></span>
+                                </div>
+                            </div>
+                        </t>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
     <template id="supplier_add_product_link" name="Link to add supplier product" inherit_id="website_portal.my_account_link">
         <xpath expr="//li/a[@href='/my/home']/.." position="after">
             <li><a href="/supplier/new_product" role="menuitem">New Supplier Product</a></li>
+            <li><a href="/supplier/product/list" role="menuitem">Supplier Product List</a></li>
         </xpath>
     </template>
 

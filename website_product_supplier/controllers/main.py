@@ -69,7 +69,7 @@ class WebsiteProductSupplier(http.Controller):
     @http.route(['/supplier/product/save/<model("product.template"):product>',
                  '/supplier/product/save/'],
                 type='http', auth="user", website=True)
-    def supplier_product_write(self, product=None, **post):
+    def supplier_product_save(self, product=None, **post):
         product_tmp_obj = request.env['product.template']
         values = {
             'main_obj': product,
@@ -83,10 +83,26 @@ class WebsiteProductSupplier(http.Controller):
                 "website_product_supplier.product", values)
 
         if product is None:
-            values['main_obj'] = product_tmp_obj.sudo().create(
-                values['product'])
+            vals = values['product']
+            vals.update(manufacturer=request.env.user.partner_id.id)
+            values['main_obj'] = product_tmp_obj.sudo().create(vals)
         else:
             product.write(values['product'])
 
         return request.website.render(
             "website_product_supplier.product", values)
+
+
+
+    @http.route(['/supplier/product/list'],
+                type='http', auth="user", website=True)
+    def supplier_product_list(self, **post):
+        product_tmp_obj = request.env['product.template']
+        domain = [('manufacturer', '=', request.env.user.partner_id.id)]
+        products = product_tmp_obj.search(domain)
+        values = {
+            'products': products,
+        }
+
+        return request.website.render(
+            "website_product_supplier.product_list", values)
