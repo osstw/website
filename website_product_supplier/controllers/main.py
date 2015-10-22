@@ -93,6 +93,11 @@ class WebsiteProductSupplier(http.Controller):
             "website_product_supplier.product", values)
 
 
+    def _prepare_product_list(self, products):
+        values = {
+            'products': products,
+        }
+        return values
 
     @http.route(['/supplier/product/list'],
                 type='http', auth="user", website=True)
@@ -100,9 +105,7 @@ class WebsiteProductSupplier(http.Controller):
         product_tmp_obj = request.env['product.template']
         domain = [('manufacturer', '=', request.env.user.partner_id.id)]
         products = product_tmp_obj.search(domain)
-        values = {
-            'products': products,
-        }
+        values = self._prepare_product_list(products)
 
         return request.website.render(
             "website_product_supplier.product_list", values)
