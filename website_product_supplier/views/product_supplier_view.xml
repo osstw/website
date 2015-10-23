@@ -12,8 +12,8 @@
                         <div class="alert alert-warning" t-if="error">
                             <i class="fa fa-exclamation-triangle"/><span t-esc="error_name"/>
                         </div>
-                        <form id="supplier_product" class="form-horizontal" t-attf-action="/supplier/product/save" method="post" enctype="multipart/form-data">
-                            <input id="porduct_id" type="hidden" name="product_id"/>
+                        <form id="supplier_product" class="form-horizontal" t-attf-action="/supplier/product/save/#{slug(main_obj)}" method="post" enctype="multipart/form-data">
+                            <input id="product_id" type="hidden" name="product_id" t-attf-value="product.get('id')"/>
                             <div class="panel panel-default">
                                 <div class="panel-heading">
                                     <h3 class="panel-title"><span t-esc="product.get('name','New product')"/></h3>
@@ -70,6 +70,12 @@
     <template id="product_list" name="Supplier Products">
         <t t-call="website.layout">
             <div class="container mt8">
+                <div class="products_pager">
+                    <div class="row" style="width: 100%;">
+                        <!--<t t-call="website_sale.search"><t t-set="search_class">pagination form-inline col-md-3</t></t>-->
+                        <t t-call="website.pager"/>
+                    </div>
+                </div>
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <h3 class="panel-title">Your Products</h3>
@@ -77,11 +83,26 @@
                     <div class="panel-body">
                         <t t-foreach="products" t-as="product">
                             <div class="row mb8">
-                                <div class="col col-md-2 col-xs-6">
-                                    <span t-field="product.name"></span>
+                                <div class="col-md-2">
+                                  <div class="oe_product_image">
+                                      <a itemprop="url" t-att-href="'/supplier/product/%s' % slug(product)">
+                                          <img itemprop="image" class="img img-responsive"
+                                               t-att-src="website.image_url(product, 'image', None if product_image_big else '300x300')"
+                                               t-att-alt="product.name"/>
+                                      </a>
+                                  </div>
                                 </div>
-                                <div class="col col-md-2 col-xs-6"><t t-esc="product.description"/></div>
-                                <div class="col col-md-4 col-xs-12"><t t-esc="product.list_price"/></div>
+                                <div class="col col-md-4 col-xs-6">
+                                    <div class="row">
+                                        <a t-att-href="'/supplier/product/%s' % slug(product)" t-att-alt="product.name">
+                                            <span t-field="product.name"></span>
+                                        </a>
+                                    </div>
+                                    <div class="row">
+                                        <span t-field="product.description"></span>
+                                    </div>
+                                </div>
+                                <div class="col col-md-1 col-xs-12"><t t-esc="product.list_price"/></div>
                                 <div class="col col-md-2 col-xs-6">
                                     <span t-if="product.website_published">
                                         <i class="fa fa-check"/>

@@ -5,6 +5,7 @@
 
 from openerp import http
 from openerp.http import request
+from openerp.addons.website.models.website import slug
 
 PPG = 20 # Products Per Page
 
@@ -94,14 +95,15 @@ class WebsiteProductSupplier(http.Controller):
         return request.website.render(
             "website_product_supplier.product", values)
 
-
-    def _prepare_product_list(self, products):
+    def _prepare_product_list(self, products, pager):
         values = {
             'products': products,
+            'pager': pager,
         }
         return values
 
-    @http.route(['/supplier/product/list'],
+    @http.route(['/supplier/product/list',
+                 '/supplier/product/list/page/<int:page>'],
                 type='http', auth="user", website=True)
     def supplier_product_list(self, page=0, **post):
         product_tmp_obj = request.env['product.template']
@@ -110,9 +112,13 @@ class WebsiteProductSupplier(http.Controller):
         url = "/supplier/product/list"
         product_count = product_tmp_obj.search_count(domain)
 
-        pager = request.website.pager(url=url, total=product_count, page=page, step=PPG, scope=7, url_args=post)
-        products = product_tmp_obj.search(domain, limit=PPG, offset=pager['offset'])
-        values = self._prepare_product_list(products)
+        pager = request.website.pager(
+            url=url, total=product_count, page=page, step=PPG, scope=7,
+            url_args=post)
+        products = product_tmp_obj.search(
+            domain, limit=PPG, offset=pager['offset'])
+
+        values = self._prepare_product_list(products, pager)
 
         return request.website.render(
             "website_product_supplier.product_list", values)
